@@ -19,8 +19,12 @@ app.use(cors({
     "http://localhost:3000", 
     "https://image-generator-1jpm8vajx-yudhisthir-mauryas-projects.vercel.app"
   ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
+
+app.options("*", cors());
  app.use(express.json({limit:"50mb"}));
  app.use(express.urlencoded({extended:true}));
 
