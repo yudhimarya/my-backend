@@ -14,7 +14,7 @@ dotenv.config();
 
 const app=express();
 
-app.use(cors({
+const corsOptions = {
   origin: [
     "http://localhost:3000", 
     "https://image-generator-1jpm8vajx-yudhisthir-mauryas-projects.vercel.app"
@@ -22,9 +22,12 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
-}));
+};
 
-app.options("*", cors());
+app.use(cors(corsOptions));
+
+// Also handle preflight for all routes
+app.options("*", cors(corsOptions));
  app.use(express.json({limit:"50mb"}));
  app.use(express.urlencoded({extended:true}));
 
