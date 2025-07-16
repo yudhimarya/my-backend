@@ -13,7 +13,14 @@ import generateImage from "./routes/GenerateImage.js"
 dotenv.config();
 
 const app=express();
- app.use(cors());
+
+app.use(cors({
+  origin: [
+    "http://localhost:3000", 
+    "https://image-generator-1jpm8vajx-yudhisthir-mauryas-projects.vercel.app"
+  ],
+  credentials: true
+}));
  app.use(express.json({limit:"50mb"}));
  app.use(express.urlencoded({extended:true}));
 
