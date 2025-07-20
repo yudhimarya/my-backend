@@ -1,77 +1,49 @@
 import cors from "cors";
 import express from "express";
-
 import mongoose from "mongoose";
-
 import * as dotenv from "dotenv";
 
-import router from "./routes/Postman.js"
-
-import generateImage from "./routes/GenerateImage.js"
-
+import router from "./routes/Postman.js";
+import generateImage from "./routes/GenerateImage.js";
 
 dotenv.config();
 
-const app=express();
+const app = express();
 
+// ✅ CORS Configuration
 const corsOptions = {
-  origin: [
-
-    "https://image-generator-app-blue.vercel.app"
-
-  ],
+  origin: "https://image-generator-app-blue.vercel.app", // 🔥 Remove trailing slash
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  credentials: true,
 };
 
+// ✅ Apply CORS before other middlewares
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Handle preflight
 
-// Also handle preflight for all routes
-app.options("*", cors(corsOptions));
- app.use(express.json({limit:"50mb"}));
- app.use(express.urlencoded({extended:true}));
+// ✅ Body parsers
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true }));
 
- app.use((err,req,res,next)=>{
-    const status =err.status || 500;
-    const message= err.message || "Something went wrong!";
-    return res.status(status).json({
-        success:false,
-        status,
-        message,
-    })
- })
+// ✅ Routes
+app.use("/api/post", router);
+app.use("/api/generateImage", generateImage);
 
-app.use("/api/post", router)
-app.use("/api/generateImage", generateImage)
-
-   
- app.get("/", async (req,res)=>{
-    res.status(200).json({
-        message:"Hello Yuhdi Developers!"
-    });
- });
-
-const connectDB=()=>{
-    mongoose.set("strictQuery", true);
-    mongoose.connect(process.env.MONGODB_URL).then(()=> console.log("MongoDB Connected"))
-    .catch((err)=>{
-        console.error("Failed to connect to DB");
-        console.error(err);
-    })
-}
-
-const PORT = process.env.PORT || 8080;
-
- const startServer= async() =>{
-    try{
-        connectDB();
-        app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
+// ✅ Root route
+app.get("/", async (req, res) => {
+  res.status(200).json({
+    message: "Hello Yuhdi Developers!",
+  });
 });
-    }catch(error){
-        console.log(error);
-    }
- };
 
- startServer();
+// ✅ Error handler — LAST
+app.use((err, req, res, next) => {
+  const status = err.status || 500;
+  const message = err.message || "Something went wrong!";
+  return res.status(status).json({
+    success: false,
+    status,
+    message,
+  });
+});
