@@ -17,7 +17,7 @@ const app=express();
 const corsOptions = {
   origin: [
 
-    "https://image-generator-app-blue.vercel.app/"
+    "https://image-generator-app-blue.vercel.app"
 
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
