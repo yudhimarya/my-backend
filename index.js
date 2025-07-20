@@ -16,7 +16,7 @@ const app=express();
 
 const corsOptions = {
   origin: [
-    "http://localhost:3000", 
+
     "https://image-generator-app-blue.vercel.app/"
 
   ],
